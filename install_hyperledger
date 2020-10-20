@@ -1,4 +1,4 @@
-git clone https://github.com/yigitpolat/Hyperledger-IoT
+#git clone https://github.com/yigitpolat/Hyperledger-IoT
 cd volume
 kubectl create -f createPVandPVC.yaml
 
