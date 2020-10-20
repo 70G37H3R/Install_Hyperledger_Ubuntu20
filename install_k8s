@@ -1,25 +1,35 @@
-sudo apt update
+#Install kubelet, kubeadm and kubectl
 sudo apt -y install curl apt-transport-https
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
-
 sudo apt update
 sudo apt -y install vim git curl wget kubelet kubeadm kubectl
 sudo apt-mark hold kubelet kubeadm kubectl
 
+#Disable Swap
 sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
 sudo swapoff -a
 
+#Set hostname 
+#nano /etc/hostname
+
+#Set hosts
+nano /etc/hosts
+#127.0.0.1 localhost 
+#ip.address master
+#ip.address worker1
+#ip.address worker2
+
+#Configure sysctl
 sudo modprobe overlay
 sudo modprobe br_netfilter
-
 sudo tee /etc/sysctl.d/kubernetes.conf<<EOF
 net.bridge.bridge-nf-call-ip6tables = 1
 net.bridge.bridge-nf-call-iptables = 1
 net.ipv4.ip_forward = 1
 EOF
 
-# Add repo and Install packages
+#Install Container runtime
 sudo apt update
 sudo apt install -y curl gnupg2 software-properties-common apt-transport-https ca-certificates
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -41,7 +51,7 @@ sudo tee /etc/docker/daemon.json <<EOF
   "storage-driver": "overlay2"
 }
 EOF
-#config proxy
+#config proxy for docker
 sudo tee /etc/systemd/system/docker.service.d/http-proxy.conf <<EOF
 [Service]
 Environment="http_proxy=http://proxy.ctu.edu.vn:3128"
@@ -54,18 +64,20 @@ Environment="FTP_PROXY=http://proxy.ctu.edu.vn:3128"
 Environment="NO_PROXY=localhost,127.0.0.1,192.168.100.16,192.168.0.{1..253},10.96.0.{1..253}"
 EOF
 
-# Start and enable Services
+#Start and enable Services
 sudo systemctl daemon-reload 
 sudo systemctl restart docker
 sudo systemctl enable docker
 
+#Enable kubelet service
 sudo systemctl enable kubelet
+#Pull container images
 sudo kubeadm config images pull
-
+#Create cluster
 sudo kubeadm init --apiserver-advertise-address=192.168.100.16 --pod-network-cidr=192.168.0.0/16 
-
+#Configure kubectl 
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
-
+#Install network plugin on Master
 kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
