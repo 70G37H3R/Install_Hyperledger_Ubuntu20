@@ -82,8 +82,8 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 #kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
 
 #Setup an NFS
-sudo apt-get install nfs-kernel-server
-sudo apt-get install nfs-common
+sudo apt-get install nfs-kernel-server -y
+sudo apt-get install nfs-common -y
 sudo mkdir -p /opt/share
 sudo chown nobody:nogroup /opt/share
 sudo chmod 777 /opt/share
