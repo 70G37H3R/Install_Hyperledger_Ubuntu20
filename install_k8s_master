@@ -1,3 +1,4 @@
+sudo apt update
 #Install kubelet, kubeadm and kubectl
 sudo apt -y install curl apt-transport-https
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
@@ -35,6 +36,8 @@ sudo apt install -y curl gnupg2 software-properties-common apt-transport-https c
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 sudo apt update
+sudo curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
 sudo apt install -y containerd.io docker-ce docker-ce-cli
 
 # Create required directories
@@ -66,7 +69,7 @@ EOF
 
 #Start and enable Services
 sudo systemctl daemon-reload 
-sudo systemctl restart docker
+
 sudo systemctl enable docker
 
 #Enable kubelet service
@@ -74,10 +77,27 @@ sudo systemctl enable kubelet
 #Pull container images
 sudo kubeadm config images pull
 #Create cluster
-sudo kubeadm init --apiserver-advertise-address=192.168.100.16 --pod-network-cidr=192.168.0.0/16 
+sudo kubeadm init --apiserver-advertise-address=<ip-server> --pod-network-cidr=<ip-server>.0.0/16 
 #Configure kubectl 
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 #Install network plugin on Master
-kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+#kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/a70459be0084506e4ec919aa1c114638878db11b/Documentation/kube-flannel.yml
+#kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+
+#Setup an NFS
+sudo apt-get install nfs-kernel-server
+sudo apt-get install nfs-common
+sudo mkdir -p /opt/share
+sudo chown nobody:nogroup /opt/share
+sudo chmod 777 /opt/share
+sudo nano /etc/exports
+sudo exportfs -a
+sudo systemctl restart nfs-kernel-server
+
+#On worker node
+#sudo mount 10.62.157.209:/opt/share /opt/share
+#sudo nano /etc/fstab
+#<ip-server>:/opt/share /opt/share auto,nofail,noatime,nolock,intr,tcp,actimeo=1800 0 0
+
