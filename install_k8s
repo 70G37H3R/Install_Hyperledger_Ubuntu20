@@ -15,7 +15,7 @@ sudo swapoff -a
 #nano /etc/hostname
 
 #Set hosts
-nano /etc/hosts
+#nano /etc/hosts
 #127.0.0.1 localhost 
 #ip.address master
 #ip.address worker1
@@ -65,7 +65,6 @@ EOF
 
 #Start and enable Services
 sudo systemctl daemon-reload 
-
 sudo systemctl enable docker
 
 #Enable kubelet service
