@@ -73,7 +73,7 @@ sudo systemctl enable kubelet
 #Pull container images
 sudo kubeadm config images pull
 #Create cluster
-sudo kubeadm init --apiserver-advertise-address=<ip-server> --pod-network-cidr=10.244.0.0/16 
+sudo kubeadm init --pod-network-cidr=10.244.0.0/16 
 #Configure kubectl 
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
