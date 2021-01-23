@@ -1,36 +1,18 @@
-sudo apt update
-#Install kubelet, kubeadm and kubectl
-sudo apt -y install curl apt-transport-https
-curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
-sudo apt update
-sudo apt -y install vim git curl wget kubelet kubeadm kubectl
-sudo apt-mark hold kubelet kubeadm kubectl
+#Set hostname 
+#sudo nano /etc/hostname
+#Set hosts
+#sudo nano /etc/hosts
+#127.0.0.1 localhost 
+#ip.address.master master-hostname
+#ip.address.worker1 worker1-hostname
+#ip.address.worker2 worker2-hostname
+#sudo reboot
 
 #Disable Swap
 sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
 sudo swapoff -a
 
-#Set hostname 
-#nano /etc/hostname
-
-#Set hosts
-#nano /etc/hosts
-#127.0.0.1 localhost 
-#ip.address master
-#ip.address worker1
-#ip.address worker2
-
-#Configure sysctl
-sudo modprobe overlay
-sudo modprobe br_netfilter
-sudo tee /etc/sysctl.d/kubernetes.conf<<EOF
-net.bridge.bridge-nf-call-ip6tables = 1
-net.bridge.bridge-nf-call-iptables = 1
-net.ipv4.ip_forward = 1
-EOF
-
-#Install Container runtime
+#Install Docker and Docker-Compose
 sudo apt update
 sudo apt install -y curl gnupg2 software-properties-common apt-transport-https ca-certificates
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -39,10 +21,8 @@ sudo apt update
 sudo apt install -y containerd.io docker-ce docker-ce-cli
 sudo curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
-
 # Create required directories
 sudo mkdir -p /etc/systemd/system/docker.service.d
-
 # Create daemon json config file
 sudo tee /etc/docker/daemon.json <<EOF
 {
@@ -54,7 +34,7 @@ sudo tee /etc/docker/daemon.json <<EOF
   "storage-driver": "overlay2"
 }
 EOF
-#config proxy for docker
+#Config proxy for docker
 sudo tee /etc/systemd/system/docker.service.d/http-proxy.conf <<EOF
 [Service]
 Environment="http_proxy=http://proxy.ctu.edu.vn:3128"
@@ -62,39 +42,63 @@ Environment="https_proxy=http://proxy.ctu.edu.vn:3128"
 Environment="ftp_proxy=http://proxy.ctu.edu.vn:3128"
 Environment="no_proxy=localhost,127.0.0.1,192.168.0.0/16,10.244.0.0/16"
 EOF
-
 #Start and enable Services
 sudo systemctl daemon-reload 
 sudo systemctl restart docker
 sudo systemctl enable docker
+#Run docker without sudo
+sudo usermod -aG docker $USER
+reboot
 
-#Enable kubelet service
+#Install Kubernetes on master and workers
+sudo apt update
+sudo apt -y install curl apt-transport-https
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+sudo apt update
+sudo apt -y install vim git curl wget kubelet kubeadm kubectl
+sudo apt-mark hold kubelet kubeadm kubectl
+#Configure sysctl on master and workers
+sudo modprobe overlay
+sudo modprobe br_netfilter
+sudo tee /etc/sysctl.d/kubernetes.conf<<EOF
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+net.ipv4.ip_forward = 1
+EOF
+#Enable kubelet service on master and workers
 sudo systemctl enable kubelet
-#Pull container images
+#Pull container images on master
 sudo kubeadm config images pull
-#Create cluster
+#Create cluster on master
 sudo kubeadm init --pod-network-cidr=10.244.0.0/16 
-#Configure kubectl 
+#Configure kubectl on master
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
-
+#Print join command on Master
+#kubeadm token create --print-join-command
 #Install network plugin on Master
 #kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 #kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
 
-#Setup an NFS
+#Setup an NFS on master
 sudo apt-get install nfs-kernel-server -y
+#Setup an NFS on workers
 sudo apt-get install nfs-common -y
+#On master and workers
 sudo mkdir -p /opt/share
 sudo chown nobody:nogroup /opt/share
 sudo chmod 777 /opt/share
-sudo nano /etc/exports
+#On master
+sudo tee /etc/exports <<EOF
+/opt/share      *(rw,sync,no_subtree_check,no_root_squash)
+EOF
 sudo exportfs -a
 sudo systemctl restart nfs-kernel-server
-
 #On worker node
-#sudo mount 10.62.157.209:/opt/share /opt/share
-#sudo nano /etc/fstab
-#<ip-server>:/opt/share /opt/share auto,nofail,noatime,nolock,intr,tcp,actimeo=1800 0 0
+sudo mount <ip.master>:/opt/share /opt/share
+sudo tee /etc/fstab <<EOF
+<ip-master>:/opt/share /opt/share auto,nofail,noatime,nolock,intr,tcp,actimeo=1800 0 0
+EOF
 
