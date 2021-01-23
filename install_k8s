@@ -1,3 +1,6 @@
+################################
+#DO NOT RUN THIS SCRIPT AS ROOT#
+################################
 #Set hostname 
 #sudo nano /etc/hostname
 #Set hosts
