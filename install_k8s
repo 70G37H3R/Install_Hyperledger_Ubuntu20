@@ -51,7 +51,11 @@ sudo systemctl restart docker
 sudo systemctl enable docker
 #Run docker without sudo
 sudo usermod -aG docker $USER
-reboot
+#reboot
+#########################################
+#       Remember to reboot later!!!     #
+#You need to reboot to apply this change#
+#########################################
 
 #Install Kubernetes on master and workers
 sudo apt update
