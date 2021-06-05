@@ -14,7 +14,7 @@ sudo chmod +x /usr/local/bin/docker-compose
 # Create required directories
 sudo mkdir -p /etc/systemd/system/docker.service.d
 # Create daemon json config file
-sudo tee /etc/docker/daemon.json <<EOF
+sudo cat >> /etc/docker/daemon.json <<EOF
 {
   "exec-opts": ["native.cgroupdriver=systemd"],
   "log-driver": "json-file",
@@ -25,7 +25,7 @@ sudo tee /etc/docker/daemon.json <<EOF
 }
 EOF
 #Config proxy for docker
-sudo tee /etc/systemd/system/docker.service.d/http-proxy.conf <<EOF
+sudo cat >> /etc/systemd/system/docker.service.d/http-proxy.conf <<EOF
 [Service]
 Environment="http_proxy=http://proxy.ctu.edu.vn:3128"
 Environment="https_proxy=http://proxy.ctu.edu.vn:3128"
