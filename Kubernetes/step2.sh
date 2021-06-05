@@ -29,7 +29,7 @@ sudo tee /etc/systemd/system/docker.service.d/http-proxy.conf <<EOF
 Environment="http_proxy=http://proxy.ctu.edu.vn:3128"
 Environment="https_proxy=http://proxy.ctu.edu.vn:3128"
 Environment="ftp_proxy=http://proxy.ctu.edu.vn:3128"
-Environment="no_proxy=localhost,127.0.0.1,192.168.0.0/16,10.244.0.0/16"
+Environment="no_proxy=localhost,127.0.0.1,192.168.0.0/16,10.0.0.0/24"
 EOF
 #Start and enable Services
 sudo systemctl daemon-reload 
