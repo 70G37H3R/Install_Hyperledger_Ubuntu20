@@ -188,7 +188,7 @@ fabric-repo$ cd raft-fabric-sample
 fabric-repo/hlf_raft$ mkdir bin && cp -r ../fabric-samples/bin/ .
 ```
 
-5. If you do a ls in your `bin` folder within your `raft-fabric-sample`, you should see the following:
+5. If you do a ls in your `bin` folder within your `hlf_raft`, you should see the following:
 
 ```
 fabric-repo/hlf_raft/bin$ ls
