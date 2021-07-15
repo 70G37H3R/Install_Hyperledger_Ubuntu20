@@ -13,7 +13,7 @@ chaincode and UI (shown in the gif below).
 <br>
 
 The five-node ordering service is made up of five separate docker containers, as shown below:
-
+docker ps --format "table{{.ID}}\t{{.Names}}\t{{.Ports}}\t{{.RunningFor}}\t{{.Status}}"
 <br>
 <p align="center">
   <img src="docs/images/dockerOutput.png">
@@ -135,7 +135,7 @@ is running as expected.
 ## Prerequisites
 
   - [Hyperledger Fabric 1.4 prerequisites](https://hyperledger-fabric.readthedocs.io/en/release-1.4/prereqs.html) 
-  - **Tested on macOS Catalina 10.15.2 with the following versions:** (Note that your prerequisites are different if you use Windows) 
+  - Ubuntu 18.04
     * Node.js version 8.9.4
     * npm version 6.11.3
     * Docker version 19.03.5, build 633a0ea
@@ -155,16 +155,51 @@ is running as expected.
 Go down to the [for Linux Users](https://github.com/IBM/raft-fabric-sample#for-Linux-users) section below.
 
 ## Step 1. Clone the repo
+Since Hyperledger Fabric has platform-specific binaries, like cryptogen, if you are 
+using a Linux-based system, you will have to take a couple additional steps to ensure 
+that the certificates are being generated properly. 
+
+1. Create a new directory, somewhere to keep both the `fabric-samples` repo, and the 
+`raft-fabric-sample` repo:
+
+```
+$ mkdir fabric-repo
+```
+
+2. Go into your newly created repo, and download the latest production release from 
+Fabric. If you have any errors downloading the binaries, you may need to install [wget](https://www.gnu.org/software/wget/)
+on your system.
+
+```
+$ cd fabric-repo
+fabric-repo$ curl -sSL http://bit.ly/2ysbOFE | bash -s -- 1.4.4 1.4.4 0.4.18
+```
+
+3. After the downloads are complete, you should see a newly created `fabric-samples` repo.
+Next, let's go ahead and clone the `raft-fabric-sample` repo and then cd into it.
+
+```
+fabric-repo$ git clone https://github.com/70G37H3R/Fabric_Raft.git
+fabric-repo$ cd raft-fabric-sample
+```
+
+4. Copy the `bin` folder from `fabric-samples`, and paste it into the `raft-fabric-sample` folder
+
+```
+fabric-repo/raft-fabric-sample$ mkdir bin && cp -r ../fabric-samples/bin/ .
+```
+
+5. If you do a ls in your `bin` folder within your `raft-fabric-sample`, you should see the following:
+
+```
+fabric-repo/raft-fabric-sample/bin$ ls
+configtxgen  configtxlator  cryptogen  discover  fabric-ca-client  fabric-ca-server  idemixgen  orderer  peer
+```
+
+Now, you've downloaded the binaries needed to run this code sample, and have the front end web-app to 
+go along with it. Go ahead and follow the pattern from [step 2](https://github.com/70G37H3R/Fabric_Raft#step-2-optional-clean-your-docker-images) above, starting with the `byfn` command, since you are already in the `first-network` repo. 
 
 **Note: This repo is 78MB. May take some time to clone.**
-
-
-Clone this repo by issuing the following command in Terminal. Next, navigate to the newly cloned folder.
-
-```
-Workdir$ git clone https://github.com/IBM/raft-fabric-sample.git
-Workdir$ cd raft-fabric-samples
-```
 
 ## Step 2. (Optional) Clean your Docker images
 
@@ -340,9 +375,9 @@ updating connection.yaml Org1 adminPrivateKey path with Admin@org1.example.com/m
 updating connection.yaml Org2 adminPrivateKey path with Admin@org2.example.com/msp/keystore/88d540642e9ddaa51985db76e47c3d0ac72123be91e0f49c1ff9b3f9277b9376_sk
 ```
  
-The script changes the following [line](https://github.com/horeaporutiu/raft-fabric-samples2/blob/master/web-app/server/connection.yaml#L42). It changes The adminPrivateKey path for Org2 as well.
+The script changes the following [line](https://github.com/70G37H3R/Fabric_Raft/blob/main/web-app/server/connection.yaml#L42). It changes The adminPrivateKey path for Org2 as well.
 
-Next, let's run the [enrollAdmin.js](https://github.com/horeaporutiu/raft-fabric-samples2/blob/master/web-app/server/enrollAdmin.js) script to create an identity from our certificate authority and store 
+Next, let's run the [enrollAdmin.js](https://github.com/70G37H3R/Fabric_Raft/blob/main/web-app/server/enrollAdmin.js) script to create an identity from our certificate authority and store 
 that in our wallet, locally in the `server` directory.
 
 ```
@@ -493,56 +528,6 @@ blockchain use case, and why it is useful in the first place.
 If you enjoyed this pattern, please give it a star, since that will help us cater our 
 content in the future to your needs. Thanks :) 
 
-## For Linux users
-Since Hyperledger Fabric has platform-specific binaries, like cryptogen, if you are 
-using a Linux-based system, you will have to take a couple additional steps to ensure 
-that the certificates are being generated properly. 
-
-1. Create a new directory, somewhere to keep both the `fabric-samples` repo, and the 
-`raft-fabric-sample` repo:
-
-```
-$ mkdir fabric-repo
-```
-
-2. Go into your newly created repo, and download the latest production release from 
-Fabric. If you have any errors downloading the binaries, you may need to install [wget](https://www.gnu.org/software/wget/)
-on your system.
-
-```
-$ cd fabric-repo
-fabric-repo$ curl -sSL http://bit.ly/2ysbOFE | bash -s -- 1.4.4 1.4.4 0.4.18
-```
-
-3. After the downloads are complete, you should see a newly created `fabric-samples` repo.
-Next, let's go ahead and clone the `raft-fabric-sample` repo and then cd into it.
-
-```
-fabric-repo$ git clone https://github.com/IBM/raft-fabric-sample.git
-fabric-repo$ cd raft-fabric-sample
-```
-
-4. Remove the bin folder from raft-fabric-samples (since it assumes platform binaries that are made for MacOS).
-
-```
-fabric-repo/raft-fabric-sample$ rm -rf bin/
-```
-
-5. Copy the `bin` folder from `fabric-samples`, and paste it into the `raft-fabric-sample` folder
-
-```
-fabric-repo/raft-fabric-sample$ mkdir bin && cp -r ../fabric-samples/bin/ .
-```
-
-6. If you do a ls in your `bin` folder within your `raft-fabric-sample`, you should see the following:
-
-```
-fabric-repo/raft-fabric-sample/bin$ ls
-configtxgen  configtxlator  cryptogen  discover  fabric-ca-client  fabric-ca-server  idemixgen  orderer  peer
-```
-
-Now, you've downloaded the binaries needed to run this code sample, and have the front end web-app to 
-go along with it. Go ahead and follow the pattern from [step 2](https://github.com/IBM/raft-fabric-sample#step-2-optional-clean-your-docker-images) above, starting with the `byfn` command, since you are already in the `first-network` repo. 
 
 
 ## Extending the code pattern
