@@ -13,7 +13,9 @@ chaincode and UI (shown in the gif below).
 <br>
 
 The five-node ordering service is made up of five separate docker containers, as shown below:
+
 docker ps --format "table{{.ID}}\t{{.Names}}\t{{.Ports}}\t{{.RunningFor}}\t{{.Status}}"
+
 <br>
 <p align="center">
   <img src="docs/images/dockerOutput.png">
