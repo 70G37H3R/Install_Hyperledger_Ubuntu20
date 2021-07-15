@@ -153,9 +153,6 @@ is running as expected.
 6. [Start the Fabcar web app](#step-6-start-the-Fabcar-web-app)
 7. [Test the network - crash the ordering nodes](#step-7-Test-the-network---crash-the-ordering-nodes)
 
-### (If you are using a Linux-based system, see steps below)
-Go down to the [for Linux Users](https://github.com/IBM/raft-fabric-sample#for-Linux-users) section below.
-
 ## Step 1. Clone the repo
 Since Hyperledger Fabric has platform-specific binaries, like cryptogen, if you are 
 using a Linux-based system, you will have to take a couple additional steps to ensure 
