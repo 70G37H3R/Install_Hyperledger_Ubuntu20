@@ -199,7 +199,7 @@ configtxgen  configtxlator  cryptogen  discover  fabric-ca-client  fabric-ca-ser
 ```
 
 Now, you've downloaded the binaries needed to run this code sample, and have the front end web-app to 
-go along with it. Go ahead and follow the pattern from [step 2](https://github.com/70G37H3R/Fabric_Raft#step-2-optional-clean-your-docker-images) above, starting with the `byfn` command, since you are already in the `first-network` repo. 
+go along with it.
 
 **Note: This repo is 78MB. May take some time to clone.**
 
