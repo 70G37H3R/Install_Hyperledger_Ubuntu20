@@ -159,7 +159,7 @@ using a Linux-based system, you will have to take a couple additional steps to e
 that the certificates are being generated properly. 
 
 1. Create a new directory, somewhere to keep both the `fabric-samples` repo, and the 
-`raft-fabric-sample` repo:
+`hlf_raft` repo:
 
 ```
 $ mkdir fabric-repo
@@ -175,23 +175,23 @@ fabric-repo$ curl -sSL http://bit.ly/2ysbOFE | bash -s -- 1.4.4 1.4.4 0.4.18
 ```
 
 3. After the downloads are complete, you should see a newly created `fabric-samples` repo.
-Next, let's go ahead and clone the `raft-fabric-sample` repo and then cd into it.
+Next, let's go ahead and clone the `hlf_raft` repo and then cd into it.
 
 ```
-fabric-repo$ git clone https://github.com/70G37H3R/Fabric_Raft.git
+fabric-repo$ git clone https://github.com/70G37H3R/hlf_raft.git
 fabric-repo$ cd raft-fabric-sample
 ```
 
-4. Copy the `bin` folder from `fabric-samples`, and paste it into the `raft-fabric-sample` folder
+4. Copy the `bin` folder from `fabric-samples`, and paste it into the `hlf_raft` folder
 
 ```
-fabric-repo/raft-fabric-sample$ mkdir bin && cp -r ../fabric-samples/bin/ .
+fabric-repo/hlf_raft$ mkdir bin && cp -r ../fabric-samples/bin/ .
 ```
 
 5. If you do a ls in your `bin` folder within your `raft-fabric-sample`, you should see the following:
 
 ```
-fabric-repo/raft-fabric-sample/bin$ ls
+fabric-repo/hlf_raft/bin$ ls
 configtxgen  configtxlator  cryptogen  discover  fabric-ca-client  fabric-ca-server  idemixgen  orderer  peer
 ```
 
@@ -207,7 +207,7 @@ projects that are using the same containers on the same ports. Also, if you ran 
 Docker system with the following commands. Note when asked if you want to continue type in `y`:
 
 ```
-raft-fabric-samples$ cd first-network/
+hlf_raft$ cd first-network/
 first-network$ ./byfn.sh down
 ```
 
@@ -343,13 +343,13 @@ client and server directories of the web-app, and run npm install.
 ```
 first-network$ cd ..
 raft-fabric-samples$ cd web-app/client/
-client$ npm install
+client$ npm i
 ```
 
 ```
 first-network$ cd ..
 raft-fabric-samples$ cd web-app/server/
-server$ npm install
+server$ npm i
 ```
 
 ## Step 5. Create a cryptographic identity
@@ -374,9 +374,9 @@ updating connection.yaml Org1 adminPrivateKey path with Admin@org1.example.com/m
 updating connection.yaml Org2 adminPrivateKey path with Admin@org2.example.com/msp/keystore/88d540642e9ddaa51985db76e47c3d0ac72123be91e0f49c1ff9b3f9277b9376_sk
 ```
  
-The script changes the following [line](https://github.com/70G37H3R/Fabric_Raft/blob/main/web-app/server/connection.yaml#L42). It changes The adminPrivateKey path for Org2 as well.
+The script changes the following [line](https://github.com/70G37H3R/hlf_raft/blob/main/web-app/server/connection.yaml#L42). It changes The adminPrivateKey path for Org2 as well.
 
-Next, let's run the [enrollAdmin.js](https://github.com/70G37H3R/Fabric_Raft/blob/main/web-app/server/enrollAdmin.js) script to create an identity from our certificate authority and store 
+Next, let's run the [enrollAdmin.js](https://github.com/70G37H3R/hlf_raft/blob/main/web-app/server/enrollAdmin.js) script to create an identity from our certificate authority and store 
 that in our wallet, locally in the `server` directory.
 
 ```
@@ -427,7 +427,7 @@ server$ npm start
 You should see the following output:
 
 ```
-> server@1.0.0 start /Users/Horea.Porutiu@ibm.com/Workdir/testDir/testDec20/raft-fabric-samples2/web-app/server
+> server@1.0.0 start XXX/hlf_raft/web-app/server
 > ./node_modules/nodemon/bin/nodemon.js src/app.js
 
 [nodemon] 1.18.10
@@ -449,7 +449,7 @@ should automatically refresh and have cars shown as shown in the picture below:
 If all goes well, you should see the following output in your Express server:
 
 ```
-Wallet path: /Users/Horea.Porutiu@ibm.com/Workdir/testDir/testDec21/raft-fabric-samples2/web-app/server/wallet
+Wallet path: XXX/hlf_raft/web-app/server/wallet
 Transaction has been evaluated, result is: [{"Key":"CAR0","Record":{"color":"blue","make":"Toyota","model":"Prius","owner":"Tomoko","docType":"car"}},{"Key":"CAR1","Record":{"color":"red","make":"Ford","model":"Mustang","owner":"Brad","docType":"car"}},{"Key":"CAR2","Record":{"color":"green","make":"Hyundai","model":"Tucson","owner":"Jin Soo","docType":"car"}},{"Key":"CAR3","Record":{"color":"yellow","make":"Volkswagen","model":"Passat","owner":"Max","docType":"car"}},{"Key":"CAR4","Record":{"color":"black","make":"Tesla","model":"S","owner":"Adriana","docType":"car"}},{"Key":"CAR5","Record":{"color":"purple","make":"Peugeot","model":"205","owner":"Michel","docType":"car"}},{"Key":"CAR6","Record":{"color":"white","make":"Chery","model":"S22L","owner":"Aarav","docType":"car"}},{"Key":"CAR7","Record":{"color":"violet","make":"Fiat","model":"Punto","owner":"Pari","docType":"car"}},{"Key":"CAR8","Record":{"color":"indigo","make":"Tata","model":"Nano","owner":"Valeria","docType":"car"}},{"Key":"CAR9","Record":{"color":"brown","make":"Holden","model":"Barina","owner":"Shotaro","docType":"car"}}]
 ::1 - - [21/Dec/2019:04:54:03 +0000] "GET /queryAllCars HTTP/1.1" 200 1063 "http://localhost:4200/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36"
 ```
