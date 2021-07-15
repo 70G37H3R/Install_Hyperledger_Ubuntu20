@@ -179,7 +179,7 @@ Next, let's go ahead and clone the `hlf_raft` repo and then cd into it.
 
 ```
 fabric-repo$ git clone https://github.com/70G37H3R/hlf_raft.git
-fabric-repo$ cd raft-fabric-sample
+fabric-repo$ cd hlf_raft
 ```
 
 4. Copy the `bin` folder from `fabric-samples`, and paste it into the `hlf_raft` folder
@@ -275,7 +275,7 @@ Generating certs and genesis block for channel 'mychannel' with CLI timeout of '
 Continue? [Y/n] y
 proceeding ...
 
-/Users/Horea.Porutiu@ibm.com/Workdir/testDir/testDec20/raft-fabric-samples2/first-network/../bin/cryptogen
+XXX/hlf_raft/first-network/../bin/cryptogen
 
 ##########################################################
 ##### Generate certificates using cryptogen tool #########
@@ -342,13 +342,13 @@ client and server directories of the web-app, and run npm install.
 
 ```
 first-network$ cd ..
-raft-fabric-samples$ cd web-app/client/
+hlf_raft$ cd web-app/client/
 client$ npm i
 ```
 
 ```
 first-network$ cd ..
-raft-fabric-samples$ cd web-app/server/
+hlf_raft$ cd web-app/server/
 server$ npm i
 ```
 
@@ -403,7 +403,7 @@ client$ npm start
 
 You should see the following output:
 ```
-> client@0.0.0 start /Users/Horea.Porutiu@ibm.com/Workdir/testDir/testDec20/raft-fabric-samples2/web-app/client
+> client@0.0.0 start XXX/hlf_raft/web-app/client
 > ng serve
 
 ** Angular Live Development Server is listening on localhost:4200, open your browser on http://localhost:4200/ **
