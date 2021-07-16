@@ -512,7 +512,7 @@ transaction.
 
 The logs above show you exactly what is being recorded on the network in terms of who is the leader, the following, who is sending out the heartbeat message, and other important aspects 
 of the consensus mechanism. To learn more about the Raft consensus mechanism, I urge you to 
-see the white paper, along with the other articles that are in the [related links](https://github.com/horeaporutiu/raft-fabric-sample#related-links) section below. To fully 
+see the white paper, along with the other articles that are in the [related links](https://github.com/70G37H3R/hlf_raft#related-links) section below. To fully 
 learn the intricacies behind the algorithm, you will need to spend a lot of time reading and 
 experimenting.
 
